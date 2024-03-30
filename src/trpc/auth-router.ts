@@ -3,6 +3,7 @@ import { publicProcedure, router } from "./trpc";
 import { getPayloadClient } from "../get-payload";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import payload from "payload";
 
 export const authRouter = router({
   createPayloadUser: publicProcedure.input(AuthCredentialsValidator).mutation(async ({ input }) => {
@@ -37,4 +38,17 @@ export const authRouter = router({
 
     return { success: true };
   }),
+  signIn: publicProcedure.input(AuthCredentialsValidator).mutation(async ({ input, ctx }) => {
+    try {
+      await payload.login({
+        collection: 'users',
+        data: input,
+        res: ctx.res,
+      });
+
+      return { success: true };
+    } catch (error) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' });
+    }
+  })
 })
