@@ -1,8 +1,9 @@
+import PaymentStatus from "@/components/PaymentStatus";
 import { PRODUCT_CATEGORIES } from "@/config";
 import { getPayloadClient } from "@/get-payload";
 import { getServerSideUser } from "@/lib/payload-utils";
 import { formatPrice } from "@/lib/utils";
-import { Product, ProductFile } from "@/payload-types";
+import { Product, ProductFile, User } from "@/payload-types";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
@@ -125,6 +126,7 @@ const Page = async ({ searchParams }: PageProps) => {
                   <p className="text-base">{formatPrice(orderTotal + fee)}</p>
                 </div>
               </div>
+              <PaymentStatus isPaid={order._isPaid} orderEmail={(order.user as User).email} orderId={order.id} />
               <div className="mt-16 border-t border-gray-200 py-6 text-right">
                 <Link href='/products' className="text-sm font-medium text-blue-600 hover:text-blue-500">
                   Continue shopping &rarr;
